@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class PermissionsViewController: UIViewController {
     //MARK: - VARIABLES
     //MARK: Interface Elements
     var requestMessageLabel: UILabel!
@@ -24,10 +24,12 @@ class ViewController: UIViewController {
     
     var showImage = true
     
+    //Strings
+    
     /**
      The permission type that the view controller is requesting permission for. If this is not explicitly set, it will automatically return "LocationServicesAlways".
     */
-    var requestingPermissionsFor: PermissionType {
+    var requestingPermissionsFor: PermissionType {       
         get {
             if _requestingPermissionsFor == nil {
                 _requestingPermissionsFor = PermissionType.LocationServicesAlways
@@ -76,6 +78,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.displayPermissionRequestFor(self.requestingPermissionsFor)
         self.updateFields()
     }
 
@@ -107,6 +110,86 @@ class ViewController: UIViewController {
                 self.delayButton.titleLabel?.text = self.delayButtonText
             }
         }
+    }
+    
+    
+    //MARK: - Message Decoding
+    var prefixDictionary: Dictionary<PermissionType, String> {
+        get {
+            if _prefixDictionary == nil {
+                _prefixDictionary = [
+                    .LocationServicesAlways : "AlwaysLocation",
+                    .LocationServicesWhenInUse : "InUseLocation",
+                    .PushNotifications : "Push"
+                ]
+            }
+            
+            return _prefixDictionary!
+        }
+    }
+    private var _prefixDictionary: Dictionary<PermissionType, String>?
+    
+    //For convenience
+    func getLocalisedStringForKey(key: String) -> String {
+        return NSLocalizedString(key, tableName: "PermissionRequestText", bundle: NSBundle.mainBundle(), value: "", comment: "")
+    }
+    
+    ///When the permission type is nil, this will only return the default keys (the permissions should be filled in manually if necessary)
+    func generateKeysForPermission(type: PermissionType?, permissions: PermissionDetails) -> MessageSection {
+        return MessageSection()
+    }
+    
+    func getPresetStrings(type: PermissionType, permissions: PermissionDetails) -> MessageSection {
+        //This will get the keys specifically for this type
+        let keys = self.generateKeysForPermission(type, permissions: permissions)
+        
+        var returnedStrings = MessageSection()
+        
+        returnedStrings.text = getLocalisedStringForKey(keys.text)
+        returnedStrings.grantButtonText = getLocalisedStringForKey(keys.grantButtonText)
+        returnedStrings.delayButtonText = getLocalisedStringForKey(keys.delayButtonText)
+        returnedStrings.imageName = getLocalisedStringForKey(keys.imageName)
+        
+        //Now to check to see if the defaults need to be used
+        
+        return returnedStrings
+    }
+    
+    /**
+     This causes the interface to be loaded with the text defined in the PermissionRequestText.strings file
+    */
+    func displayPermissionRequestFor(type: PermissionType) {
+        self.requestingPermissionsFor = type
+        
+        let permDetail = PermissionsManager.hasPermission(type)
+        
+        if permDetail.hasPermission == false {
+            let details = self.generateKeysForPermission(self.requestingPermissionsFor, permissions: permDetail)
+            
+            
+            
+            print(details)
+        } else {
+            //already have permission
+            self.dismissViewControllerAnimated(true, completion: nil)
+            
+        }
+    }
+}
+
+//This allows first for the names to be easily recalled and second to store the keys and returned strings
+struct MessageSection {
+    var text: String = "RequestMessage"
+    var imageName: String = "ImageName"
+    var grantButtonText: String = "GrantButton"
+    var delayButtonText: String = "DelayButton"
+    
+    init() {}
+    init(text: String, imageName: String, grantButtonText: String, delayButtonText: String) {
+        self.text = text
+        self.imageName = imageName
+        self.grantButtonText = grantButtonText
+        self.delayButtonText = delayButtonText
     }
 }
 

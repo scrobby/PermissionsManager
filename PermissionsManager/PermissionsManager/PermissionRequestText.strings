@@ -1,0 +1,85 @@
+/* 
+  PermissionRequestText.strings
+  PermissionsManager
+
+  Created by Carl Goldsmith on 17/02/2016.
+  Copyright © 2016 carlgoldsmith. All rights reserved.
+*/
+
+/* IF YOU ARE USING XCODE IMAGE CATALOGUES DO NOT INCLUDE AN IMAGE EXTENSION IN THE IMAGE NAME */
+
+/*Naming scheme
+ 
+ ------------
+ - PREFIXES -
+ ------------
+ Each type of permission has a certain prefix, defined here:
+ PREFIX             PERMISSION TYPE
+ - Default          Default             //This is used if there is no specifically defined property for the permission type
+ - AlwaysLocation   LocationServicesAlways
+ - InUseLocation    LocationServicesInUse
+ - Photos           Photo Library
+ - Push             Push Notifications
+ (this list will be updated as I add more permission types)
+ 
+ -----------------
+ - ELEMENT NAMES -
+ -----------------
+ This defines names for each part of the interface
+ NAME               ELEMENT AFFECTED
+ - RequestMessage   The message displayed to the user
+ - GrantButton      The button that grants permission
+ - DelayButton      The button that delays permission
+ - ImageName        The name of the image
+ 
+ -------------
+ - POSTFIXES -
+ -------------
+ This defines the postfixes that can be added on, currently only used for if permission has already been requested or if there are restrictions on the user's account
+ POSTFIX            DESCRIPTION
+ - RequestAgain     Permission already been requested
+ - Restricted       User has restrictions on their phone
+ 
+ -------------
+ - COMBINING -
+ -------------
+ Combining the prefix, element name, and postfix is simple. An _ is always used to separate the sections. If no postfix is used, there is no need for a final underscore.
+ 
+ For examples, see the default text below. There should ALWAYS be defaults in place to fall back on should other types of permissions not be defined, or be defined incorrectly.
+ 
+ ---------
+ - FLAGS -
+ ---------
+ There are certain values that will cause the interface to change. These should begin with an asterisk "*" and be in all capital letters with no whitespace or underscores. (Please note, this does mean that if you want to begin your message/button title with an asterisk, you must precede it with a backslash "\*")
+ FLAG       PURPOSE
+ - HIDDEN   Using the *HIDDEN flag will cause that element to not be displayed to the user (this is only recommeneded for use on the ImageName and GrantButton – the user should always be shown a message)
+ 
+*/
+
+//Default Text
+"Default_RequestMessage" = "This app needs permission to do something. Please grant us access by using the button below.";
+"Default_RequestMessage_RequestAgain" = "This app needs permission to do something. You can grant it by going to the Settings app.";
+"Default_RequestMessage_Restricted" = "Unfortunately, restrictions on your device mean we cannot get the permissions we need for the app to function properly. Please speak to the person who manages your device.";
+
+"Default_GrantButton" = "Grant Access"; //If access has not already been granted, a popup will appear to the user after this button is pressed, asking them to give access
+"Default_GrantButton_RequestAgain" = "Open Settings"; //If access has already been requested and denied, this button will always open the Settings app, so make sure the text is relevant
+"Default_GrantButton_Restricted" = "*HIDDEN";
+
+"Default_DelayButton" = "Later";
+"Default_DelayButton_RequestAgain" = "Later";
+"Default_DelayButton_Restricted" = "Okay";
+
+"Default_ImageName" = "*HIDDEN";
+"Default_ImageName_RequestAgain" = "*HIDDEN";
+"Default_ImageName_Restricted" = "*HIDDEN";
+
+//Always Location stuff – if permission has not yet been sought
+"AlwaysLocation_RequestMessage" = "We need to access your current location in order to locate you.";
+"AlwaysLocation_ImageName" = "NavigationIcon";
+
+//Always Location stuff - if permission has been sought
+"AlwaysLocation_RequestMessage_RequestAgain" = "We need to access your current location in order to locate you You can change the permission in the settings app.";
+"AlwaysLocation_ImageName_RequestAgain" = "LocationSettings";
+
+
+
